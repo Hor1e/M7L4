@@ -73,6 +73,33 @@ def test_auth_user_not_exist():
     authenticate_user("asasas", 1234)
     assert "Введите пароль: "
 
+"""+4 теста be s1koi"""
+def test_add_existing_user(setup_database):
+    """Тест добавления пользователя с существующим логином."""
+    add_user('duplicate_user', 'dup@example.com', 'pass123')
+    result = add_user('duplicate_user', 'dup2@example.com', 'pass456')
+    assert result is False
+
+def test_authenticate_user_success(setup_database):
+    """Тест успешной аутентификации пользователя."""
+    add_user('auth_user', 'auth@example.com', 'securepass')
+    result = authenticate_user('auth_user', 'securepass')
+    assert result is True
+
+def test_authenticate_wrong_password(setup_database):
+    """Тест аутентификации пользователя с неправильным паролем."""
+    add_user('pass2', 'gg@mail.ru', 'pass1')
+    result = authenticate_user('pass2', 'pass1')
+    assert result is False
+
+def test_display_users(setup_database, capsys):
+    """отображение списка пользователей."""
+    add_user('display_user', 'display@example.com', 'displaypass')
+    display_users()
+    captured = capsys.readouterr()
+    assert 'display_user' in captured.out
+    assert 'display@example.com' in captured.out
+
 # Возможные варианты тестов:
 """
 Тест добавления пользователя с существующим логином.
