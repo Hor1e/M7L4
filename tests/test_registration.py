@@ -37,6 +37,26 @@ def test_add_new_user(setup_database, connection):
     assert user, "Пользователь должен быть добавлен в базу данных."
 
 
+
+def test_alreadyexistinglogin_bysanya(setup_database, connection):
+    """Тест добавления пользователя с существующим логином."""
+    login = "test"
+    add_user(login, "testuser@example.com", "password123")
+    add_user(login, "seconduser@example.com", "password456")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM users WHERE username=?;", (login,))
+    users = cursor.fetchall()
+    assert len(users) == 1, "Логин не должен повторяться в дб"
+
+def test_wrongPassword_bysanya(setup_database,connection):
+    """Тест аутентификации пользователя с неправильным паролем."""
+    add_user('testuser', 'testuser@example.com', 'password123')
+    result = add_user('testuser', 'testuser@example.com', 'wrongpassword')
+    assert not result, 'неправильный пароль'
+
+
+
+
 #Добавил 3 теста снизу, рома
 def test_auth_wrong_password():
     #Попытка с неверным паролем
@@ -52,6 +72,7 @@ def test_auth_user_not_exist():
     #Что произойдет, если с неуществуюищим логином попытаться
     authenticate_user("asasas", 1234)
     assert "Введите пароль: "
+
 # Возможные варианты тестов:
 """
 Тест добавления пользователя с существующим логином.
