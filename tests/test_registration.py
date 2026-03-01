@@ -1,7 +1,7 @@
 import pytest
 import sqlite3
 import os
-from registration.registration import create_db, add_user, authenticate_user, display_users
+from registration.registration import create_db, add_user, authenticate_user, display_users, user_choice
 
 @pytest.fixture(scope="module")
 def setup_database():
@@ -56,6 +56,22 @@ def test_wrongPassword_bysanya(setup_database,connection):
 
 
 
+
+#Добавил 3 теста снизу, рома
+def test_auth_wrong_password():
+    #Попытка с неверным паролем
+    authenticate_user("hor1e", 123)
+    assert "Неверный логин или пароль."
+
+def test_auth_sucess():
+    #Тест на успешную автризацию
+    authenticate_user("hor1e", 1234)
+    assert "Авторизация успешна."
+
+def test_auth_user_not_exist():
+    #Что произойдет, если с неуществуюищим логином попытаться
+    authenticate_user("asasas", 1234)
+    assert "Введите пароль: "
 
 # Возможные варианты тестов:
 """
